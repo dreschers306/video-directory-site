@@ -78,6 +78,73 @@
       background-color: #555;
     }
   }
+
+/* Tags Section Styles */
+.tags-section {
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #ddd; 
+  }
+  
+  .tags-section h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.2em;
+  }
+  
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap; /* Allow tags to wrap to next line */
+    gap: 0.5rem; /* Spacing between tags */
+  }
+  
+  .tag-box {
+    display: inline-block;
+    background-color: #e0e0e0; /* Light grey background */
+    color: #333;
+    padding: 0.4em 0.8em;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+  }
+  
+  .tag-box:hover {
+    background-color: #ccc;
+  }
+  
+  .tag-box--more {
+    background-color: transparent;
+    color: #007bff; /* Or your link color */
+    font-weight: bold;
+  }
+  .tag-box--more:hover {
+     background-color: transparent;
+     text-decoration: underline;
+  }
+  
+  /* Adjust dark theme for tags */
+  @media (prefers-color-scheme: dark) {
+    .tags-section {
+      border-bottom-color: #444;
+    }
+    .tag-box {
+      background-color: #444;
+      color: #eee;
+    }
+     .tag-box:hover {
+      background-color: #555;
+    }
+    .tag-box--more {
+      color: #6bbdff; /* Lighter blue for dark mode */
+       background-color: transparent;
+    }
+     .tag-box--more:hover {
+      background-color: transparent;
+    }
+  }
+  
 /* Body Styles */ 
 body {
     font-family: sans-serif;

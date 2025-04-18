@@ -3,7 +3,26 @@ title: "Video Directory"
 layout: "base.njk" 
 ---
 
-{# Remove the previous welcome text if you want, or keep it above the grid #}
+{# --- START: Tags Section --- #}
+<div class="tags-section">
+  <h2>Explore Tags:</h2>
+  <div class="tag-list">
+    {# Access the tagList collection we created in eleventy.config.js #}
+    {# Loop through only the first 10 tags (adjust number as needed) #}
+    {%- for tag in collections.tagList | slice(0, 10) -%}
+      {# Create a link for each tag, using the 'slugify' filter for the URL #}
+      <a href="/tags/{{ tag | slugify }}/" class="tag-box">{{ tag }}</a>
+    {%- endfor -%}
+
+    {# Add a link to the main tags page (we'll create this page later) #}
+    {%- if collections.tagList.length > 40 -%}
+      <a href="/tags/" class="tag-box tag-box--more">See all tags &rarr;</a>
+    {%- endif -%}
+  </div>
+</div>
+{# --- END: Tags Section --- #}
+
+{# Keep your <div class="video-grid"> below this #}
 
 {# Container for our video grid #}
 <div class="video-grid">
