@@ -3,15 +3,21 @@ title: "Video Directory"
 layout: "base.njk" 
 ---
 
-{# --- START: Debug Tags Section --- #}
-<div class="tags-section" style="border: 2px dashed red; padding: 1em; margin: 1em 0; color: #fff; background: #333;"> {# Added style for visibility #}
-  <p style="margin:0 0 0.5em 0; padding:0; font-weight: bold;">DEBUGGING TAGS:</p>
-  <p style="margin:0 0 0.5em 0; padding:0;">Tag List Length = {{ collections.tagList.length }}</p> 
-  <p style="margin:0 0 0.5em 0; padding:0;">First tag (if exists) = {{ collections.tagList[0] }}</p> {# Try accessing first item #}
-  <p style="margin:0; padding:0;">Raw Tag List Data:</p>
-  <pre><code style="display:block; background:#555; padding: 0.5em;">{{ collections.tagList | dump }}</code></pre> {# Dump the whole array #}
+{# --- START: Tags Section --- #}
+<div class="tags-section">
+  {# Removed H2 heading #}
+  <div class="tag-list">
+    {%- for tag in collections.tagList | slice(0, 40) -%} {# Loop through tags (limit 40) #}
+      {# Link uses slugify filter #}
+      <a href="/tags/{{ tag | slugify }}/" class="tag-box">{{ tag }}</a> {# Display tag name #}
+    {%- endfor -%}
+
+    {%- if collections.tagList.length > 40 -%} {# Show 'See all' if more than 40 #}
+      <a href="/tags/" class="tag-box tag-box--more">See all tags &rarr;</a>
+    {%- endif -%}
+  </div>
 </div>
-{# --- END: Debug Tags Section --- #}
+{# --- END: Tags Section --- #}
 
 {# Keep your <div class="video-grid"> below this #}
 
