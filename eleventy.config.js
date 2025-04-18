@@ -1,81 +1,84 @@
 // Make the main function async to allow 'await' for imports
-module.exports = async function(eleventyConfig) { // <--- START OF FUNCTION SCOPE
+module.exports = async function(eleventyConfig) { 
 
   // --- Dynamically import slugify ---
-  const slugifyPackage = await import('@sindresorhus/slugify');
-  const slugify = slugifyPackage.default;
+  const slugifyPackage = await import('@sindresorhus/slugify'); 
+  const slugify = slugifyPackage.default; 
   // --- End dynamic import ---
 
   // --- START: Define Helper Function Once (inside module.exports scope) ---
-  function stringToArrayHelper(input) {
+  function stringToArrayHelper(input) { 
+    // This robust version handles arrays containing strings OR plain strings
     if (Array.isArray(input)) {
-      return input.map(item => String(item || '').trim()).filter(item => item.length > 0);
+      let extractedTags = [];
+      input.forEach(item => {
+        if (typeof item === 'string') {
+          extractedTags = extractedTags.concat(
+            item.split(',')
+                .map(subItem => subItem.trim())
+                .filter(subItem => subItem.length > 0)
+          );
+        }
+      });
+      return extractedTags;
     }
     if (typeof input === 'string') {
       return input.split(',')
-                .map(item => item.trim())
-                .filter(item => item.length > 0);
+                .map(item => item.trim()) 
+                .filter(item => item.length > 0); 
     }
-    return [];
+    return []; 
   }
   // --- END: Define Helper Function Once ---
 
   // --- Passthrough Copies ---
-  eleventyConfig.addPassthroughCopy("admin");
-  eleventyConfig.addPassthroughCopy("src/css");
-  eleventyConfig.addPassthroughCopy("src/js");
+  eleventyConfig.addPassthroughCopy("admin"); 
+  eleventyConfig.addPassthroughCopy("src/css"); 
+  eleventyConfig.addPassthroughCopy("src/js"); 
   // --- End Passthrough Copies ---
 
   // --- Collections ---
-  // Video collection remains the same
   eleventyConfig.addCollection("video", function(collectionApi) {
     return collectionApi.getFilteredByGlob("src/_content/videos/**/*.md");
   });
 
-  /* --- START: Complex tagList Collection (COMMENTED OUT FOR TESTING) ---
+  // --- Active tagList Collection ---
   eleventyConfig.addCollection("tagList", function(collectionApi) {
-    // ... complex logic commented out ...
-  }); // Note: removed semicolon from inside comment
-  //--- END: Complex tagList Collection (COMMENTED OUT FOR TESTING) --- */
-
-  // --- START: Minimal Test for tagList ---
-  // This is the only active tagList collection definition now
-  eleventyConfig.addCollection("tagList", function(collectionApi) {
-    // Add a single log to see if THIS function runs
-    console.log("--- Running MINIMAL tagList Collection ---");
-    // Just return a hardcoded array for testing
-    return ["test-tag-1", "test-tag-2", "sample-tag"];
+    let tagSet = new Set(); 
+    collectionApi.getFilteredByGlob("src/_content/videos/**/*.md").forEach(item => {
+      if (item.data.tags) {
+        // Call the helper function defined above
+        let tags = stringToArrayHelper(item.data.tags); 
+        tags.forEach(tag => tagSet.add(tag));
+      }
+    });
+    // Return the unique tags as a sorted array
+    return [...tagSet].sort(); 
   });
-  // --- END: Minimal Test for tagList ---
+  // --- End tagList Collection ---
+
   // --- End Collections ---
 
 
   // --- Filters ---
   // Use the helper function for the filter definition
-  eleventyConfig.addFilter("stringToArray", stringToArrayHelper);
+  eleventyConfig.addFilter("stringToArray", stringToArrayHelper); 
 
-  // Slugify Filter (uses the dynamically imported 'slugify')
   eleventyConfig.addFilter("slugify", function(str) {
-    if (!str) { return ""; }
+    if (!str) { return ""; } 
+    // Use the slugify function we loaded via import()
     return slugify(str, {
-      lower: true,
-      strict: true
+      lower: true, 
+      strict: true 
     });
   });
   // --- End Filters ---
 
-
   // Return Eleventy options
   return {
-    dir: {
-      input: "src",
-      output: "_site",
-      includes: "_includes",
-      data: "_data"
-    },
-    templateFormats: ["md", "html", "njk"],
-    markdownTemplateEngine: "njk",
-    htmlTemplateEngine: "njk"
+    dir: { input: "src", output: "_site", includes: "_includes", data: "_data" },
+    templateFormats: ["md", "html", "njk"], 
+    markdownTemplateEngine: "njk", 
+    htmlTemplateEngine: "njk" 
   };
-
-}; // <-- *** THIS IS THE CORRECT CLOSING BRACE AND SEMICOLON ***
+}; // End module.exports async function
