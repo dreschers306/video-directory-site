@@ -1,37 +1,32 @@
 backend:
   name: github
-  repo: dreschers306/video-directory-site # Your GitHub username/repo name
-  branch: main # Your default branch
-  # Correct indentation for implicit flow settings:
+  repo: dreschers306/video-directory-site # Example: dreschers306/video-directory-site
+  branch: main # Or master, depending on your default branch
   auth_type: implicit
-  app_id: Ov23lie0MLXsIP0cdDnb # Your GitHub OAuth App Client ID
+  app_id: Ov23lie0MLXsIP0cdDnb # <-- PASTE YOUR CLIENT ID HERE 
   cms_label_prefix: content/ # Optional: Prefix for commit messages
 
-# We might not need media/public folders if Python script handles all uploads,
-# but defining them doesn't hurt for now.
-media_folder: "src/assets/images" 
-public_folder: "/assets/images" 
+media_folder: "src/assets/images" # Where uploaded media files will be stored - WE MIGHT NOT NEED THIS YET
+public_folder: "/assets/images" # Public path for media files - WE MIGHT NOT NEED THIS YET
 
 collections:
-  - name: "videos" # Identifier for this collection
-    label: "Videos" # Display name in the UI
-    label_singular: "Video" # Display name for one item
-    # Use 'file' for single file collections, remove 'folder'
-    file: "src/_data/videos.json" # Path to the JSON file relative to root
-    format: "json" # Data format
-    # Specify that the top-level structure is a list/array
-    # and define fields for objects within that list.
-    # This tells Decap how to handle the array in videos.json.
-    structure: list # Or "object" if the root wasn't an array
-    fields: # Define the fields for each video object in the JSON array
+  - name: "videos" # Used in routes, e.g., /admin/#/collections/videos
+    label: "Videos" # Used in the UI
+    label_singular: "Video" # Used in the UI, e.g., "New Video"
+    folder: "_dummy_folder_not_used" # Required by Decap, but we use file collection
+    file: "src/_data/videos.json" # Specify the single JSON file to edit
+    format: "json" # Specify the file format
+    identifier_field: "videoId" # Field to identify entries in the UI
+    create: true # Allow creating new entries
+    delete: true # Allow deleting entries
+    slug: "{{videoId}}" # Not super relevant for file collections, but good practice
+    fields: # Define the fields for each video object
       - { label: "Video ID (Code)", name: "videoId", widget: "string" }
       - { label: "Bunny Video URL", name: "bunnyVideoUrl", widget: "string" }
       - { label: "Bunny Thumbnail URL", name: "bunnyThumbnailUrl", widget: "string" }
       - { label: "Bunny Preview Video URL", name: "bunnyPreviewVideoUrl", widget: "string" }
-      - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" } } 
-      - { label: "Source Group ID", name: "sourceGroupId", widget: "string", required: false } 
+      - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" } } # Basic list widget for tags
+      - { label: "Source Group ID", name: "sourceGroupId", widget: "string", required: false } # Optional field
       - { label: "Source URL", name: "sourceUrl", widget: "string", required: false }
       - { label: "Affiliate Link", name: "affiliateLink", widget: "string", required: false }
-      - { label: "Date Added", name: "dateAdded", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ", required: false } 
-    # Removed identifier_field and slug - less relevant for 'file' collections
-    # Removed create/delete - implicitly true for file collections when fields are defined
+      - { label: "Date Added", name: "dateAdded", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ", required: false } # Date widget
