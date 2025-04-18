@@ -1,5 +1,5 @@
 ---
-title: "Video Directory" {# Changed title slightly #}
+title: "Video Directory"
 layout: "base.njk" 
 ---
 
