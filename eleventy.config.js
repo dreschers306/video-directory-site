@@ -1,6 +1,7 @@
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("admin");
-  eleventyConfig.addPassthroughCopy("src/css"); 
+  eleventyConfig.addPassthroughCopy("src/css");
+  eleventyConfig.addPassthroughCopy("src/js");  
   // eleventyConfig.addPassthroughCopy("src/assets"); // Uncomment if you create an assets folder
 
   // Create a collection named "video" from files in the videos folder
