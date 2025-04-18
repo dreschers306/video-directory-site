@@ -5,11 +5,10 @@ body {
   
   .video-grid {
     display: grid;
-    /* Create responsive columns: minimum 200px wide, 
-       fill available space, create as many columns as fit */
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-    gap: 1rem;
-    justify-content: start; /* Spacing between grid items */
+    /* Change 1fr to a max pixel value like 250px */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 250px)); 
+    gap: 1rem; 
+    justify-content: start; /* Keep this */
   }
   
   .video-item {
