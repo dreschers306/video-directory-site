@@ -5,18 +5,18 @@ body {
   
   .video-grid {
     display: grid;
-    gap: 1rem; /* Spacing between items */
-    
-    /* Default: 2 columns for smaller screens/mobile */
-    grid-template-columns: repeat(2, 1fr); 
+    gap: 1rem; 
   
-    /* 3 columns for tablets / slightly larger screens */
-    @media (min-width: 600px) {
+    /* Default: 1 column for mobile */
+    grid-template-columns: 1fr; 
+  
+    /* 3 columns for tablets / medium screens */
+    @media (min-width: 600px) { 
       grid-template-columns: repeat(3, 1fr);
     }
   
     /* 5 columns for desktop / wider screens */
-    @media (min-width: 1024px) {
+    @media (min-width: 1024px) { 
       grid-template-columns: repeat(5, 1fr);
     }
   }
