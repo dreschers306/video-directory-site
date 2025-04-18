@@ -7,8 +7,19 @@
     <link rel="stylesheet" href="/css/style.css"> {# We'll create this later #}
   </head>
   <body>
-    <header>
-      <h1>{{ title or "Video Directory" }}</h1>
+    <header class="site-header">
+      <div class="header-container">
+        {# Site Title/Logo - Make it a link to the homepage #}
+        <a href="/" class="site-title">{{ title or "Video Directory" }}</a> 
+
+        {# Search Form - Action will be handled by JS later #}
+        <form action="#" id="search-form" class="search-form" role="search">
+          <label for="search-input" class="visually-hidden">Search Videos</label>
+          <input type="search" id="search-input" name="q" placeholder="Search by ID or tag..." aria-label="Search Videos">
+          <button type="submit">Search</button> 
+          {# We might hide/style the button later if search is instant #}
+        </form>
+      </div>
     </header>
 
     <main>
