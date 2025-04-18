@@ -3,21 +3,27 @@ title: "Video Directory"
 layout: "base.njk" 
 ---
 
-{# --- START: Ultra Simple Tags Section --- #}
-<div class="tags-section" style="border: 1px solid lime; padding: 1em; color: #fff;">
-  <p style="margin:0; padding:0; font-weight:bold;">ULTRA SIMPLE TAG TEST:</p>
-  <p style="margin:0; padding:0;">Collection Length: {{ collections.tagList.length }}</p>
-  <hr>
-  <ul>
-    {%- for tag_item in collections.tagList -%}
-      <li style="margin: 0.2em 0;">Raw Tag: {{ tag_item }}</li> {# Just output raw tag value #}
-    {%- else -%}
-      <li style="margin: 0.2em 0; color: yellow;">ERROR: collections.tagList seems empty in loop!</li> {# Explicit 'else' #}
+{# --- START: Tags Section --- #}
+<div class="tags-section">
+  <div class="tag-list">
+    {# Loop through the tagList collection, limit with slice #}
+    {%- for tag in collections.tagList | slice(0, 40) -%}
+      {# Ensure slugify filter exists and tag is not empty #}
+      {%- if tag and eleventy.filters.slugify -%} 
+        <a href="/tags/{{ tag | slugify }}/" class="tag-box">{{ tag }}</a>
+      {%- elif tag -%} 
+        {# Fallback if slugify filter somehow missing, just show tag #}
+        <span class="tag-box">{{ tag }}</span>
+      {%- endif -%}
     {%- endfor -%}
-  </ul>
-  <hr>
+
+    {# Link to see all tags #}
+    {%- if collections.tagList.length > 40 -%}
+      <a href="/tags/" class="tag-box tag-box--more">See all tags &rarr;</a>
+    {%- endif -%}
+  </div>
 </div>
-{# --- END: Ultra Simple Tags Section --- #}
+{# --- END: Tags Section --- #}
 
 {# Keep your <div class="video-grid"> below this #}
 
