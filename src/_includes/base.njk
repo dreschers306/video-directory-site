@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title or "Video Directory" }}</title> {# Use page title, or default #}
+    <link rel="stylesheet" href="/css/style.css"> {# We'll create this later #}
+  </head>
+  <body>
+    <header>
+      <h1>{{ title or "Video Directory" }}</h1>
+    </header>
+
+    <main>
+      {{ content | safe }} {# This is where index.md content will go #}
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Your Site Name</p>
+    </footer>
+
+    {# Add link to your main JavaScript file if needed later #}
+    {# <script src="/js/main.js"></script> #}
+  </body>
+</html>

@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build output
+_site/
+
+# Environment variables
+.env*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files (optional, for python script later?)
+*.log
