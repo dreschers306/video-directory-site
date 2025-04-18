@@ -1,35 +1,58 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const videoItems = document.querySelectorAll('.video-item');
+// Function to shuffle an array in place (Fisher-Yates algorithm)
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+  }
   
-    videoItems.forEach(item => {
-      const thumbnailContainer = item.querySelector('.thumbnail-container');
-      const img = thumbnailContainer?.querySelector('img');
-      const video = thumbnailContainer?.querySelector('video.video-preview');
+  // Wait for the HTML document to be fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    const gridContainer = document.querySelector('.video-grid');
+    
+    if (gridContainer) {
+      // Get all direct children (video items) of the grid
+      const items = Array.from(gridContainer.children); 
   
-      if (!thumbnailContainer || !img || !video) {
-        // Skip if elements aren't found
-        console.warn('Could not find necessary elements in video item:', item);
-        return; 
-      }
+      // Shuffle the array of items
+      shuffleArray(items);
   
-      thumbnailContainer.addEventListener('mouseenter', () => {
-        // console.log('Mouse Enter - Attempting to play:', video.src);
-        img.style.opacity = '0'; // Hide image
-        video.style.opacity = '1'; // Show video
-        video.play().catch(e => {
-          // Autoplay might be blocked by browser initially, ignore error for now
-          // console.error('Play failed (expected with placeholder):', e.name); 
-        }); 
+      // Re-append the items to the grid container in the new shuffled order
+      items.forEach(item => gridContainer.appendChild(item));
+  
+      console.log(`Randomized ${items.length} grid items.`);
+  
+      // --- Initialize Hover Previews (Code from previous step) ---
+      // Now that items are shuffled, find them again or use the shuffled 'items' array
+      const videoItems = gridContainer.querySelectorAll('.video-item'); // Or just use the 'items' array directly
+  
+      videoItems.forEach(item => {
+        const thumbnailContainer = item.querySelector('.thumbnail-container');
+        const img = thumbnailContainer?.querySelector('img');
+        const video = thumbnailContainer?.querySelector('video.video-preview');
+  
+        if (!thumbnailContainer || !img || !video) {
+          console.warn('Could not find necessary elements in video item for hover:', item);
+          return; 
+        }
+  
+        thumbnailContainer.addEventListener('mouseenter', () => {
+          img.style.opacity = '0'; 
+          video.style.opacity = '1'; 
+          video.play().catch(e => { /* Ignore playback errors for now */ }); 
+        });
+  
+        thumbnailContainer.addEventListener('mouseleave', () => {
+          video.pause();
+          video.style.opacity = '0'; 
+          img.style.opacity = '1'; 
+        });
       });
+      // --- End of Hover Preview Initialization ---
   
-      thumbnailContainer.addEventListener('mouseleave', () => {
-        // console.log('Mouse Leave - Attempting to pause:', video.src);
-        video.pause();
-        // Optional: Reset time? video.currentTime = 0; 
-        video.style.opacity = '0'; // Hide video
-        img.style.opacity = '1'; // Show image
-      });
-    });
+    } else {
+      console.warn('Video grid container not found.');
+    }
   
-    console.log(`Hover previews initialized for ${videoItems.length} items.`);
   });
