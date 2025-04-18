@@ -7,4 +7,10 @@ layout: "base.njk"
 
 This is the homepage for the video directory site.
 
-The title of this page is: {{ title }}
+## Video List Test (from Folder Collection):
+
+<ul>
+{%- for video in collections.video | reverse -%} {# Use collections.video now #}
+  <li>{{ video.data.videoId }}</li> {# Access data via video.data #}
+{%- endfor -%}
+</ul>
