@@ -1,9 +1,9 @@
 backend:
-  name: github # Change back to github
-  repo: dreschers306/video-directory-site 
-  branch: main 
-  auth_type: implicit # Put implicit back
-  app_id: Ov23lie0MLXsIP0cdDnb # Put app_id back
+  name: github
+  repo: dreschers306/video-directory-site # Your repo
+  branch: main # Your branch
+  base_url: https://video-directory-site.pages.dev/ # <-- Set to YOUR site's primary URL
+  auth_endpoint: api/auth # <-- Points to functions/api/auth.js
 
 # --- The rest of the file (media_folder, collections) remains unchanged ---
 
