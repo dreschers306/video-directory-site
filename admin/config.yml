@@ -2,6 +2,10 @@ backend:
   name: github
   repo: dreschers306/video-directory-site # Example: dreschers306/video-directory-site
   branch: main # Or master, depending on your default branch
+    # --- Add lines below for implicit flow ---
+  auth_type: implicit
+  app_id: Ov23lie0MLXsIP0cdDnb # <-- PASTE YOUR CLIENT ID HERE 
+  # --- End of added lines ---
   cms_label_prefix: content/ # Optional: Prefix for commit messages
 
 media_folder: "src/assets/images" # Where uploaded media files will be stored - WE MIGHT NOT NEED THIS YET
