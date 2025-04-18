@@ -17,7 +17,7 @@ collections:
     create: true              # Allow creating new files via CMS
     slug: "{{videoId}}"       # Sets filename using the videoId field value
     extension: "md"           # File extension for new files
-    format: "yml-frontmatter" # Data format (YAML --- front matter ---)
+    format: "frontmatter" # Data format (YAML --- front matter ---)
     fields:                   # Fields defined directly for each file's front matter
       - { label: "Video ID (Code)", name: "videoId", widget: "string" }
       # Note: dateAdded usually best set automatically, but can be manual:
