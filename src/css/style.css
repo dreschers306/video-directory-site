@@ -8,16 +8,18 @@ body {
     gap: 1rem; 
   
     /* Default: 1 column for mobile */
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr; /* Keep mobile simple */
   
     /* 3 columns for tablets / medium screens */
     @media (min-width: 600px) { 
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, 200px); /* Use fixed px */
+      justify-content: center; /* Center the grid if container is wider */
     }
   
     /* 5 columns for desktop / wider screens */
     @media (min-width: 1024px) { 
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(5, 200px); /* Use fixed px */
+      justify-content: center; /* Center the grid if container is wider */
     }
   }
   
