@@ -8,7 +8,8 @@ body {
     /* Create responsive columns: minimum 200px wide, 
        fill available space, create as many columns as fit */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-    gap: 1rem; /* Spacing between grid items */
+    gap: 1rem;
+    justify-content: start; /* Spacing between grid items */
   }
   
   .video-item {
