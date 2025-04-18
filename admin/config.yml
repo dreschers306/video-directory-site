@@ -1,34 +1,31 @@
 backend:
-  name: github
+  name: git-gateway # <--- CHANGE 'github' to 'git-gateway' HERE
   repo: dreschers306/video-directory-site # Your GitHub username/repo name
   branch: main # Your default branch
-  auth_type: implicit
-  app_id: Ov23lie0MLXsIP0cdDnb # Your GitHub OAuth App Client ID
+  # We remove auth_type and app_id when using git-gateway name like this
+  # cms_label_prefix: content/ # You can keep or remove this optional line
+
+# --- The rest of the file (media_folder, collections) remains unchanged ---
 
 media_folder: "src/assets/images" 
 public_folder: "/assets/images" 
 
 collections:
-  - name: "videos" # Internal identifier for the collection
-    label: "Videos" # Display name in the UI
-    label_singular: "Video" # Display name for one item
-    # Use the 'files' collection type, even for a single file
+  - name: "videos" 
+    label: "Videos" 
+    label_singular: "Video" 
     files:
-      # Define the single file managed by this collection
-      - name: "videos_json"   # An internal name for this file definition
-        label: "All Videos"  # Label for this file in the UI (if multiple files existed)
-        file: "src/_data/videos.json" # Path to the JSON file
-        format: "json" # Specify the file format
-        # The fields defined here apply to the *content* of the file.
-        # Since videos.json is an array, we need a top-level field 
-        # configured as a list widget to manage that array.
+      - name: "videos_json"   
+        label: "All Videos"  
+        file: "src/_data/videos.json" 
+        format: "json" 
         fields:
-          - name: items # A name for the root array (can be anything logical)
+          - name: items 
             label: Video Entries
             label_singular: Video Entry
-            widget: list # Use the 'list' widget for the top-level array
-            # Now define the fields for each object *inside* the list
+            widget: list 
             fields:
+              # ... (all your video fields remain here) ...
               - { label: "Video ID (Code)", name: "videoId", widget: "string" }
               - { label: "Bunny Video URL", name: "bunnyVideoUrl", widget: "string" }
               - { label: "Bunny Thumbnail URL", name: "bunnyThumbnailUrl", widget: "string" }
