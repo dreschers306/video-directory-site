@@ -1,15 +1,24 @@
-// Remove the old 'require' from the top (if it's still there)
-// const slugify = require("@sindresorhus/slugify"); // REMOVE/COMMENT OUT THIS LINE
-
 // Make the main function async to allow 'await' for imports
 module.exports = async function(eleventyConfig) { 
 
   // --- Dynamically import slugify ---
-  // Import the ESM package using await import()
   const slugifyPackage = await import('@sindresorhus/slugify'); 
-  // Access the actual slugify function from the imported module
   const slugify = slugifyPackage.default; 
   // --- End dynamic import ---
+
+  // --- START: Define Helper Function Once (inside module.exports scope) ---
+  function stringToArrayHelper(input) { 
+    if (Array.isArray(input)) {
+      return input.map(item => String(item || '').trim()).filter(item => item.length > 0);
+    }
+    if (typeof input === 'string') {
+      return input.split(',')
+                .map(item => item.trim()) 
+                .filter(item => item.length > 0); 
+    }
+    return []; 
+  }
+  // --- END: Define Helper Function Once ---
 
   // --- Passthrough Copies ---
   eleventyConfig.addPassthroughCopy("admin"); 
@@ -18,18 +27,16 @@ module.exports = async function(eleventyConfig) {
   // --- End Passthrough Copies ---
 
   // --- Collections ---
-  // Create a collection named "video" from files in the videos folder
   eleventyConfig.addCollection("video", function(collectionApi) {
     return collectionApi.getFilteredByGlob("src/_content/videos/**/*.md");
   });
 
-  // Create a distinct list of all tags, sorted alphabetically
   eleventyConfig.addCollection("tagList", function(collectionApi) {
     let tagSet = new Set(); 
     collectionApi.getFilteredByGlob("src/_content/videos/**/*.md").forEach(item => {
       if (item.data.tags) {
-        // Use the filter directly here for consistency
-        let tags = eleventyConfig.getFilter("stringToArray")(item.data.tags); 
+        // Call the helper function defined above
+        let tags = stringToArrayHelper(item.data.tags); // Use helper
         tags.forEach(tag => tagSet.add(tag));
       }
     });
@@ -38,37 +45,17 @@ module.exports = async function(eleventyConfig) {
   // --- End Collections ---
 
   // --- Filters ---
-// --- START: Replace stringToArray filter ---
-eleventyConfig.addFilter("stringToArray", function(input) {
-  // Check if input is already an array
-  if (Array.isArray(input)) {
-    // If it's an array, just ensure items are strings and trim them
-    // (Filters out potential null/undefined items too)
-    return input.map(item => String(item || '').trim()).filter(item => item.length > 0);
-  }
-  // Check if input is a string
-  if (typeof input === 'string') {
-    // If it's a string, split, trim, and filter
-    return input.split(',')
-                .map(item => item.trim()) 
-                .filter(item => item.length > 0); 
-  }
-  // Otherwise (null, undefined, other type), return empty array
-  return []; 
-});
-// --- END: Replace stringToArray filter ---
+  // Use the helper function for the filter definition
+  eleventyConfig.addFilter("stringToArray", stringToArrayHelper); // Use helper
 
-  // Slugify Filter (now uses the dynamically imported 'slugify')
   eleventyConfig.addFilter("slugify", function(str) {
     if (!str) { return ""; } 
-    // Use the slugify function we loaded via import()
     return slugify(str, {
       lower: true, 
       strict: true 
     });
   });
   // --- End Filters ---
-
 
   // Return Eleventy options
   return {
