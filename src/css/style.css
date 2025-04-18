@@ -1,76 +1,96 @@
 body {
     font-family: sans-serif;
-    margin: 2em; /* Add some overall spacing */
+    margin: 0; /* Remove default body margin */
+    background-color: #fff; /* Start basic theme - light for now */
+    color: #111;
+  }
+  
+  /* Add a main container for width control */
+  main {
+    max-width: 1600px; /* Limit max width of content area */
+    margin: 2em auto; /* Center container with top/bottom margin */
+    padding: 0 1rem; /* Padding inside container */
   }
   
   .video-grid {
     display: grid;
-    gap: 1rem; 
+    gap: 1.5rem; /* Slightly increase gap */
+    
+    /* Default: 1 column mobile */
+    /* Use auto-fit and a larger minmax for better responsiveness */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
   
-    /* Default: 1 column for mobile */
-    grid-template-columns: 1fr; /* Keep mobile simple */
+    /* Remove fixed column counts via media query for now, let auto-fit handle it */
+    /* @media (min-width: 600px) { ... } */
+    /* @media (min-width: 1024px) { ... } */
   
-    /* 3 columns for tablets / medium screens */
-    @media (min-width: 600px) { 
-      grid-template-columns: repeat(3, 200px); /* Use fixed px */
-      justify-content: center; /* Center the grid if container is wider */
-    }
-  
-    /* 5 columns for desktop / wider screens */
-    @media (min-width: 1024px) { 
-      grid-template-columns: repeat(5, 200px); /* Use fixed px */
-      justify-content: center; /* Center the grid if container is wider */
-    }
+    /* Remove justify-content unless needed for specific alignment later */
   }
   
   .video-item {
-    border: 1px solid #ccc; /* Simple border */
-    padding: 0.5rem;
-    background-color: #f9f9f9;
+    border: 1px solid #ddd; /* Lighter border */
+    /* Remove padding, let content define it */
+    /* padding: 0.5rem; */ 
+    background-color: #f9f9f9; /* Light card background */
+    border-radius: 4px; /* Slightly rounded corners */
+    overflow: hidden; /* Ensure image corners are clipped */
   }
   
   .video-item a {
     text-decoration: none;
     color: inherit;
-    display: block; /* Make link fill the item */
+    display: block; 
   }
   
   .thumbnail-container {
-    position: relative; /* Needed for positioning the preview video */
-    aspect-ratio: 16 / 9; /* Maintain video aspect ratio */
-    background-color: #eee; /* Placeholder background */
-    margin-bottom: 0.5rem;
+    position: relative; 
+    aspect-ratio: 16 / 9; 
+    background-color: #eee; 
+    /* Remove margin-bottom, handle spacing with padding/gap */
+    /* margin-bottom: 0.5rem; */ 
+    display: block; /* Ensure it takes space */
   }
   
-  .thumbnail-container img {
+  .thumbnail-container img,
+  .thumbnail-container video.video-preview {
+    /* Styles mostly okay, ensure display block and absolute */
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Cover the area nicely */
-    position: absolute; /* Allow layering */
+    position: absolute; 
     top: 0;
     left: 0;
-    transition: opacity 0.3s ease-in-out; /* For hover effect later */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    transition: opacity 0.3s ease-in-out; 
   }
   
   .thumbnail-container video.video-preview {
-    display: block; /* Initially block, but hidden */
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.3s ease-in-out; /* For hover effect later */
-    z-index: 5; /* Ensure video is potentially above image if needed */
+    opacity: 0; 
+    z-index: 5; 
   }
-  
-  /* We'll add the :hover styles for the preview later with JavaScript */
   
   .video-id-title {
     font-weight: bold;
-    text-align: center;
+    text-align: left; /* Align left for better readability below thumb */
     margin: 0;
     font-size: 0.9em;
+    padding: 0.5rem 0.75rem; /* Add padding around the title */
+    white-space: nowrap; /* Prevent wrapping for short IDs */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Basic dark theme variables (can refine later) */
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #121212;
+      color: #eee;
+    }
+    .video-item {
+      background-color: #222;
+      border-color: #444;
+    }
+    .thumbnail-container {
+      background-color: #333;
+    }
   }

@@ -16,12 +16,12 @@ function shuffleArray(array) {
       const items = Array.from(gridContainer.children); 
   
       // Shuffle the array of items
-      //shuffleArray(items);
+      shuffleArray(items);
   
       // Re-append the items to the grid container in the new shuffled order
-      //items.forEach(item => gridContainer.appendChild(item));
+      items.forEach(item => gridContainer.appendChild(item));
   
-      //console.log(`Randomized ${items.length} grid items.`);
+      console.log(`Randomized ${items.length} grid items.`);
   
       // --- Initialize Hover Previews (Code from previous step) ---
       // Now that items are shuffled, find them again or use the shuffled 'items' array
