@@ -3,23 +3,16 @@ title: "Video Directory"
 layout: "base.njk" 
 ---
 
-{# --- START: Tags Section --- #}
-<div class="tags-section">
-  <div class="tag-list">
-    {# Access the tagList collection we created in eleventy.config.js #}
-    {# Loop through only the first 10 tags (adjust number as needed) #}
-    {%- for tag in collections.tagList | slice(0, 10) -%}
-      {# Create a link for each tag, using the 'slugify' filter for the URL #}
-      <a href="/tags/{{ tag | slugify }}/" class="tag-box">{{ tag }}</a>
-    {%- endfor -%}
-
-    {# Add a link to the main tags page (we'll create this page later) #}
-    {%- if collections.tagList.length > 40 -%}
-      <a href="/tags/" class="tag-box tag-box--more">See all tags &rarr;</a>
-    {%- endif -%}
-  </div>
+{# --- START: Debug Tags Section --- #}
+<div class="tags-section" style="border: 2px dashed red; padding: 1em; margin: 1em 0;">
+  <p>DEBUGGING TAGS:</p>
+  <p>Tag List Length = {{ collections.tagList.length }}</p> 
+  <p>Raw Tag List Data:</p>
+  <pre><code>{{ collections.tagList | dump }}</code></pre>
 </div>
-{# --- END: Tags Section --- #}
+{# --- END: Debug Tags Section --- #}
+
+{# Keep the <div class="video-grid"> below this #}
 
 {# Keep your <div class="video-grid"> below this #}
 
