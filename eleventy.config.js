@@ -1,13 +1,12 @@
 // Make the main function async to allow 'await' for imports
-module.exports = async function(eleventyConfig) {
+module.exports = async function(eleventyConfig) { // <--- START OF FUNCTION SCOPE
 
   // --- Dynamically import slugify ---
   const slugifyPackage = await import('@sindresorhus/slugify');
   const slugify = slugifyPackage.default;
   // --- End dynamic import ---
 
-  // --- START: Define Helper Function Once ---
-  // We still need this helper for the stringToArray filter
+  // --- START: Define Helper Function Once (inside module.exports scope) ---
   function stringToArrayHelper(input) {
     if (Array.isArray(input)) {
       return input.map(item => String(item || '').trim()).filter(item => item.length > 0);
@@ -35,34 +34,8 @@ module.exports = async function(eleventyConfig) {
 
   /* --- START: Complex tagList Collection (COMMENTED OUT FOR TESTING) ---
   eleventyConfig.addCollection("tagList", function(collectionApi) {
-    console.log("\n--- Building tagList Collection ---"); // LOG START
-    let tagSet = new Set(); 
-    
-    // Helper function inside collection scope for this test (now defined outside)
-    // function processItemTags(tagData) { ... } // Logic moved to stringToArrayHelper
-
-    const videos = collectionApi.getFilteredByGlob("src/_content/videos/**/     //*.md");
-    console.log(`Found ${videos.length} video files.`); // LOG COUNT
-
-    videos.forEach((item, index) => {
-      console.log(`[${index+1}/${videos.length}] Processing file: ${item.inputPath}`); // LOG FILENAME
-      console.log(`  Raw item.data.tags:`, item.data.tags); 
-      console.log(`  Type of item.data.tags: ${typeof item.data.tags}`); 
-
-      if (item.data.tags) { 
-          let processedTags = stringToArrayHelper(item.data.tags); // Use main helper
-          console.log(`  Processed tags array:`, processedTags); // LOG PROCESSED TAGS
-          processedTags.forEach(tag => tagSet.add(tag));
-      } else {
-        console.log("  No tags found or tags field empty in front matter."); // LOG if no tags field
-      }
-    });
-    console.log("Final tagSet before sorting:", tagSet); // LOG FINAL SET
-    const sortedTags = [...tagSet].sort();
-    console.log("Sorted tagList being returned:", sortedTags); // LOG RETURN VALUE
-    console.log("--- Finished tagList Collection ---\n");
-    return sortedTags; 
-  };
+    // ... complex logic commented out ...
+  }); // Note: removed semicolon from inside comment
   //--- END: Complex tagList Collection (COMMENTED OUT FOR TESTING) --- */
 
   // --- START: Minimal Test for tagList ---
@@ -74,7 +47,6 @@ module.exports = async function(eleventyConfig) {
     return ["test-tag-1", "test-tag-2", "sample-tag"];
   });
   // --- END: Minimal Test for tagList ---
-
   // --- End Collections ---
 
 
@@ -105,4 +77,5 @@ module.exports = async function(eleventyConfig) {
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk"
   };
-; // End module.exports async function
+
+}; // <-- *** THIS IS THE CORRECT CLOSING BRACE AND SEMICOLON ***
