@@ -31,15 +31,15 @@ module.exports = async function(eleventyConfig) {
     return collectionApi.getFilteredByGlob("src/_content/videos/**/*.md");
   });
 
-// --- START: Replace tagList Collection ---
+// --- START: Replace tagList Collection with LOGGING version ---
 eleventyConfig.addCollection("tagList", function(collectionApi) {
+  console.log("\n--- Building tagList Collection ---"); // LOG START
   let tagSet = new Set(); 
 
-  // Helper function specifically for processing tags within this collection
+  // Helper function inside collection scope for this test
   function processItemTags(tagData) { 
     let tags = [];
     if (Array.isArray(tagData)) {
-      // If it's an array, process each string element within it
       tagData.forEach(item => {
         if (typeof item === 'string') {
           tags = tags.concat(
@@ -50,7 +50,6 @@ eleventyConfig.addCollection("tagList", function(collectionApi) {
         }
       });
     } else if (typeof tagData === 'string') {
-      // If it's already a string, process it directly
       tags = tagData.split(',')
                   .map(item => item.trim()) 
                   .filter(item => item.length > 0); 
@@ -58,15 +57,28 @@ eleventyConfig.addCollection("tagList", function(collectionApi) {
     return tags; 
   }
 
-  collectionApi.getFilteredByGlob("src/_content/videos/**/*.md").forEach(item => {
-    if (item.data.tags) {
-      // Use the specific processing logic for the tag data
-      let processedTags = processItemTags(item.data.tags); 
-      processedTags.forEach(tag => tagSet.add(tag));
+  const videos = collectionApi.getFilteredByGlob("src/_content/videos/**/*.md");
+  console.log(`Found ${videos.length} video files.`); // LOG COUNT
+
+  videos.forEach((item, index) => {
+    console.log(`[<span class="math-inline">\{index\+1\}/</span>{videos.length}] Processing file: ${item.inputPath}`); // LOG FILENAME
+    // Log the raw tags data and its type
+    console.log(`  Raw item.data.tags:`, item.data.tags); 
+    console.log(`  Type of item.data.tags: ${typeof item.data.tags}`); 
+
+    if (item.data.tags) { 
+        let processedTags = processItemTags(item.data.tags); 
+        console.log(`  Processed tags array:`, processedTags); // LOG PROCESSED TAGS
+        processedTags.forEach(tag => tagSet.add(tag));
+    } else {
+      console.log("  No tags found or tags field empty in front matter."); // LOG if no tags field
     }
   });
-  // Return the unique tags as a sorted array
-  return [...tagSet].sort(); 
+  console.log("Final tagSet before sorting:", tagSet); // LOG FINAL SET
+  const sortedTags = [...tagSet].sort();
+  console.log("Sorted tagList being returned:", sortedTags); // LOG RETURN VALUE
+  console.log("--- Finished tagList Collection ---\n");
+  return sortedTags; 
 });
 // --- END: Replace tagList Collection ---
 
