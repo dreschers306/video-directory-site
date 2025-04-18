@@ -3,21 +3,18 @@ title: "Video Directory"
 layout: "base.njk" 
 ---
 
-{# --- START: Tags Section --- #}
+{# --- START: Tags Section - Final Loop Test --- #}
 <div class="tags-section">
   <div class="tag-list">
-    {# Loop through the tagList collection, limit with slice #}
-    {%- for tag in collections.tagList | slice(0, 40) -%}
-      {# Ensure slugify filter exists and tag is not empty #}
-      {%- if tag and eleventy.filters.slugify -%} 
-        <a href="/tags/{{ tag | slugify }}/" class="tag-box">{{ tag }}</a>
-      {%- elif tag -%} 
-        {# Fallback if slugify filter somehow missing, just show tag #}
-        <span class="tag-box">{{ tag }}</span>
-      {%- endif -%}
+    <p style="color: lime;">DEBUG: Attempting simplified tag loop...</p> {# Debug message #}
+    {%- for tag_item in collections.tagList -%}
+      {# Just output the tag inside a basic link, no filters #}
+      <a href="#" class="tag-box">{{ tag_item }}</a> 
+    {%- else -%}
+      <p style="color: red;">ERROR: Loop thinks collections.tagList is empty!</p> {# Should not appear #}
     {%- endfor -%}
-
-    {# Link to see all tags #}
+    
+    {# Keep the 'See all' link logic just in case #}
     {%- if collections.tagList.length > 40 -%}
       <a href="/tags/" class="tag-box tag-box--more">See all tags &rarr;</a>
     {%- endif -%}
