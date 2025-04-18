@@ -1,9 +1,9 @@
 backend:
-  name: git-gateway # <--- CHANGE 'github' to 'git-gateway' HERE
-  repo: dreschers306/video-directory-site # Your GitHub username/repo name
-  branch: main # Your default branch
-  # We remove auth_type and app_id when using git-gateway name like this
-  # cms_label_prefix: content/ # You can keep or remove this optional line
+  name: github # Change back to github
+  repo: dreschers306/video-directory-site 
+  branch: main 
+  auth_type: implicit # Put implicit back
+  app_id: Ov23lie0MLXsIP0cdDnb # Put app_id back
 
 # --- The rest of the file (media_folder, collections) remains unchanged ---
 
