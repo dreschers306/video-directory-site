@@ -3,19 +3,19 @@ title: "Video Directory"
 layout: "base.njk" 
 ---
 
-{# --- START: Tags Section - Final Loop Test --- #}
+{# --- START: Tags Section --- #}
 <div class="tags-section">
   <div class="tag-list">
-    <p style="color: lime;">DEBUG: Attempting simplified tag loop...</p> {# Debug message #}
-    {%- for tag_item in collections.tagList -%}
-      {# Just output the tag inside a basic link, no filters #}
-      <a href="#" class="tag-box">{{ tag_item }}</a> 
+    {%- for tag in collections.tagList -%} 
+      {# Basic link structure, no slice or slugify yet #}
+      <a href="#" class="tag-box">{{ tag }}</a> 
     {%- else -%}
-      <p style="color: red;">ERROR: Loop thinks collections.tagList is empty!</p> {# Should not appear #}
+       <p style="color: red;">ERROR: Loop thinks collections.tagList is empty!</p>
     {%- endfor -%}
-    
-    {# Keep the 'See all' link logic just in case #}
-    {%- if collections.tagList.length > 40 -%}
+
+    {# Keep the 'See all' link logic #}
+    {%- if collections.tagList.length > 40 -%} 
+      {# This condition will be false for now as length is 5 #}
       <a href="/tags/" class="tag-box tag-box--more">See all tags &rarr;</a>
     {%- endif -%}
   </div>
