@@ -40,13 +40,18 @@ pagination:
     data-date="{{ video.data.dateAdded }}"> {# Add date for potential JS sorting later #}
     data-pagefind-index-attrs="data-date"> {# Optional: index date? #}
       <a href="{{ video.url }}" 
-     data-pagefind-meta="videoId:{{ video.data.videoId }}" 
-     {# Add each tag as a filter attribute #}
-     {%- for tag in video.data.tags | stringToArray %}
-       data-pagefind-filter="tag:{{ tag }}"
-     {%- endfor %}>
-      
-        <div class="thumbnail-container">
+     {# Explicitly define metadata for Pagefind #}
+       data-pagefind-meta="videoId:{{ video.data.videoId }}"
+       {# Tell Pagefind which image belongs to this result #}
+       data-pagefind-image="{{ video.data.bunnyThumbnailUrl }}"
+       data-pagefind-image-alt="Thumbnail for video {{ video.data.videoId }}"
+       {# Add tags as filterable facets #}
+       {%- for tag in video.data.tags | stringToArray %}
+         data-pagefind-filter="tag:{{ tag }}"
+       {%- endfor %}> 
+
+        {# Add data-pagefind-ignore to prevent indexing raw img/video tags as text #}
+        <div class="thumbnail-container" data-pagefind-ignore>
           {# Static thumbnail image #}
           <img 
             src="{{ video.data.bunnyThumbnailUrl }}" 
@@ -68,15 +73,16 @@ pagination:
           {% endif %}
         </div>
 
-        {# Display the Video ID #}
-        <p class="video-id-title">{{ video.data.videoId }}</p> 
-      </a>
-      {# We can add tags here later if desired #}
-    </article>
+        {# Weight the videoId so it shows up prominently #}
+      <p class="video-id-title" data-pagefind-weight="2">{{ video.data.videoId }}</p> 
+    </a>
+    {# Optional: Add tags explicitly to body text for indexing? #}
+    {# <div data-pagefind-ignore style="display:none;">Tags: {{ video.data.tags }}</div> #}
+  </article>
 
   {%- else -%}
     {# Optional: Message if no videos exist yet #}
-    <p>No videos found.</p>
+    <p>No videos found for this page.</p>
   {%- endfor -%}
 
 </div>
