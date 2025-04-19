@@ -34,56 +34,49 @@ pagination:
 <div class="video-grid">
 
   {# Loop through each video in our 'video' collection #}
-  {%- for video in videosOnPage -%} 
+  {%- for video in videosOnPage -%}
+      {# Add pagefind attributes to the article wrapper #}
+      <article class="video-item"
+               data-date="{{ video.data.dateAdded }}"
+               data-pagefind-index-attrs="data-date" {# Optional: index date? #}
+               data-pagefind-body {# Index content within this article #}
+               data-pagefind-meta="videoId:{{ video.data.videoId }}" {# Meta on article #}
+               data-pagefind-image="{{ video.data.bunnyThumbnailUrl }}" {# Image on article #}
+               data-pagefind-image-alt="Thumbnail for video {{ video.data.videoId }}">
 
-    <article class="video-item" 
-    data-date="{{ video.data.dateAdded }}"> {# Add date for potential JS sorting later #}
-    data-pagefind-index-attrs="data-date"> {# Optional: index date? #}
-      <a href="{{ video.url }}" 
-     {# Explicitly define metadata for Pagefind #}
-       data-pagefind-meta="videoId:{{ video.data.videoId }}"
-       {# Tell Pagefind which image belongs to this result #}
-       data-pagefind-image="{{ video.data.bunnyThumbnailUrl }}"
-       data-pagefind-image-alt="Thumbnail for video {{ video.data.videoId }}"
-       {# Add tags as filterable facets #}
-       {%- for tag in video.data.tags | stringToArray %}
-         data-pagefind-filter="tag:{{ tag }}"
-       {%- endfor %}> 
+        {# Link contains only filters #}
+        <a href="{{ video.url }}"
+           {%- for tag in video.data.tags | stringToArray %}
+             data-pagefind-filter="tag:{{ tag }}" {# Filters on link #}
+           {%- endfor %}>
 
-        {# Add data-pagefind-ignore to prevent indexing raw img/video tags as text #}
-        <div class="thumbnail-container" data-pagefind-ignore>
-          {# Static thumbnail image #}
-          <img 
-            src="{{ video.data.bunnyThumbnailUrl }}" 
-            alt="Thumbnail for video {{ video.data.videoId }}" 
-            loading="lazy" {# Improve performance #}
-            width="320" {# Add dimensions for better layout stability #}
-            height="180"
-            class="static-thumb"> 
+          {# Ignore the container itself for excerpts #}
+          <div class="thumbnail-container" data-pagefind-ignore>
+            {# Images inside ignored container are still known via article attributes #}
+            <img src="{{ video.data.bunnyThumbnailUrl }}" 
+                 alt="Thumbnail for video {{ video.data.videoId }}" 
+                 loading="lazy" 
+                 width="320" 
+                 height="180"
+                 class="static-thumb">
+            {% if video.data.bunnyPreviewVideoUrl %}
+              <img src="{{ video.data.bunnyPreviewVideoUrl }}" 
+                   alt="Preview for video {{ video.data.videoId }}" 
+                   loading="lazy" 
+                   width="320" 
+                   height="180"
+                   class="img-preview">
+            {% endif %}
+          </div>
 
-          {# Animated Preview Image (.webp) #}
-          {% if video.data.bunnyPreviewVideoUrl %}
-            <img 
-              src="{{ video.data.bunnyPreviewVideoUrl }}" {# <--- Changed from <video> to <img> #}
-              alt="Preview for video {{ video.data.videoId }}"
-              loading="lazy" {# Lazy load preview too #}
-              width="320"
-              height="180" 
-              class="img-preview"> {# <--- Added class, changed from video-preview #}
-          {% endif %}
-        </div>
-
-        {# Weight the videoId so it shows up prominently #}
-      <p class="video-id-title" data-pagefind-weight="2">{{ video.data.videoId }}</p> 
-    </a>
-    {# Optional: Add tags explicitly to body text for indexing? #}
-    {# <div data-pagefind-ignore style="display:none;">Tags: {{ video.data.tags }}</div> #}
-  </article>
-
-  {%- else -%}
-    {# Optional: Message if no videos exist yet #}
-    <p>No videos found for this page.</p>
-  {%- endfor -%}
+          {# Index the title within the body, give it weight #}
+          <p class="video-id-title" data-pagefind-weight="2">{{ video.data.videoId }}</p>
+        </a>
+        {# Removed the optional hidden tags div for simplicity #}
+      </article>
+    {%- else -%}
+      <p>No videos found for this page.</p>
+    {%- endfor -%}
 
 </div>
 
