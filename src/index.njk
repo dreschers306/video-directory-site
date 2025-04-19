@@ -1,7 +1,13 @@
 ---
-title: "Video Directory"
+title: "Video Directory" 
 layout: "base.njk" 
+pagination:
+  data: collections.video # Use the SHUFFLED video collection
+  size: 4 # Items per page << ADJUSTED
+  alias: videosOnPage # Variable for items on current page
 ---
+
+{# Template content below #}
 
 {# --- START: Tags Section --- #}
 <div class="tags-section">
@@ -28,7 +34,7 @@ layout: "base.njk"
 <div class="video-grid">
 
   {# Loop through each video in our 'video' collection #}
-  {%- for video in collections.video | reverse -%} {# 'reverse' shows newest first based on file creation/git history initially #}
+  {%- for video in videosOnPage -%} 
 
     <article class="video-item" data-date="{{ video.data.dateAdded }}"> {# Add date for potential JS sorting later #}
       <a href="{{ video.url }}"> {# Link to the video's future detail page #}
@@ -66,3 +72,28 @@ layout: "base.njk"
   {%- endfor -%}
 
 </div>
+
+{# --- START: Pagination Navigation (Unstyled Logic) --- #}
+<nav class="pagination-nav" aria-label="Pagination">
+  <ul class="pagination-list">
+    {# Link to Previous Page (if it exists) #}
+    {% if pagination.previousPageHref %}
+      <li><a href="{{ pagination.previousPageHref }}">&larr; Previous</a></li>
+    {% endif %}
+
+    {# Links to Individual Pages (Optional but nice) #}
+    {%- for pageEntry in pagination.pages %}
+      <li>
+        <a href="{{ pagination.hrefs[ loop.index0 ] }}" {% if page.url == pagination.hrefs[ loop.index0 ] %} aria-current="page"{% endif %}>
+          {{ loop.index }}
+        </a>
+      </li>
+    {%- endfor %}
+
+    {# Link to Next Page (if it exists) #}
+    {% if pagination.nextPageHref %}
+      <li><a href="{{ pagination.nextPageHref }}">Next &rarr;</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{# --- END: Pagination Navigation --- #}

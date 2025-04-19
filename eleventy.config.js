@@ -9,6 +9,16 @@ module.exports = async function(eleventyConfig) {
   console.log("[CONFIG] Slugify imported successfully"); // Log: Import done
   // --- End dynamic import ---
 
+  // --- START: Add Shuffle Helper ---
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array; // Return the shuffled array
+}
+// --- END: Add Shuffle Helper ---
+
   // --- START: Define Helper Function Once ---
   function stringToArrayHelper(input) {
     console.log("[HELPER] stringToArrayHelper received:", input, `(Type: ${typeof input})`);
@@ -45,12 +55,22 @@ module.exports = async function(eleventyConfig) {
 
   // --- Collections ---
   try {
-    eleventyConfig.addCollection("video", function(collectionApi) {
-      console.log("[CONFIG] Building 'video' collection"); // Log: Video collection start
-      let videos = collectionApi.getFilteredByGlob("src/_content/videos/**/*.md");
-      console.log(`[CONFIG] 'video' collection found ${videos.length} items.`); // Log: Video collection end
-      return videos;
-    });
+    // --- START: Updated Video Collection with Shuffle ---
+  eleventyConfig.addCollection("video", function(collectionApi) {
+  console.log("[CONFIG] Building 'video' collection"); 
+  // Get all items Eleventy knows about, filter for our video markdown files
+  let videoItems = collectionApi.getAllSorted().filter(item => 
+      item.inputPath && item.inputPath.includes('/src/_content/videos/')
+  );
+  console.log(`[CONFIG] 'video' collection found ${videoItems.length} items.`); 
+
+  // Shuffle the array before returning
+  shuffleArray(videoItems);
+  console.log(`[CONFIG] 'video' collection shuffled ${videoItems.length} items.`); 
+
+  return videoItems;
+});
+// --- END: Updated Video Collection with Shuffle ---
 
 // --- START: Updated tagList Collection ---
 eleventyConfig.addCollection("tagList", function(collectionApi) {

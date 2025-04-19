@@ -241,6 +241,72 @@ body {
     margin-bottom: 1.5em; /* Space below player */
   }
 
+/* Pagination Styles */
+.pagination-nav {
+  margin-top: 2rem;  /* Add space above pagination */
+  margin-bottom: 2rem; /* Add space below pagination */
+  text-align: center; /* Center the list */
+}
+.pagination-list {
+  list-style: none; /* Remove default list bullets */
+  padding: 0;
+  margin: 0;
+  display: inline-flex; /* Align items horizontally */
+  gap: 0.5rem; /* Space between links */
+}
+.pagination-list li span, 
+.pagination-list li a {
+  display: block;
+  padding: 0.5em 1em; /* Padding inside links */
+  border: 1px solid #ccc;
+  text-decoration: none;
+  border-radius: 4px;
+  background-color: #f0f0f0; /* Light background */
+  color: #333;
+}
+/* Hover effect for clickable links */
+.pagination-list li a:hover {
+  background-color: #e0e0e0;
+}
+/* Style for the current page link */
+.pagination-list li a[aria-current="page"] {
+  background-color: #333;
+  color: #fff;
+  border-color: #333;
+  font-weight: bold;
+  cursor: default; /* Indicate it's not clickable */
+}
+/* Style for disabled Previous/Next links */
+.pagination-list li.disabled span {
+  color: #aaa;
+  border-color: #eee;
+  background-color: #f9f9f9;
+  cursor: default;
+}
+
+/* Dark theme adjustments for pagination */
+ @media (prefers-color-scheme: dark) {
+  .pagination-list li span, 
+  .pagination-list li a {
+    border-color: #555;
+    background-color: #333;
+    color: #eee;
+  }
+   .pagination-list li a:hover {
+    background-color: #444;
+  }
+   .pagination-list li a[aria-current="page"] {
+    background-color: #eee;
+    color: #111;
+    border-color: #eee;
+  }
+   .pagination-list li.disabled span {
+    color: #777;
+    border-color: #333;
+    background-color: #222;
+  }
+ }
+
   /* Basic dark theme variables (can refine later) */
   @media (prefers-color-scheme: dark) {
     body {
