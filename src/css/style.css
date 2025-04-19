@@ -29,30 +29,19 @@
     line-height: 1; /* Adjust line height for larger font */
   }
   
-  .search-form {
-    display: flex; 
-    align-items: center;
-  }
-  
-  .search-form input[type="search"] {
-    /* Increase padding and font size */
-    padding: 0.75em; /* <--- ADJUSTED (was 0.5em) */
-    font-size: 1em; /* <--- ADJUSTED (ensure base size) */
-    border: 1px solid #ccc;
-    border-radius: 4px 0 0 4px; 
-    min-width: 250px; /* <--- ADJUSTED (was 200px) */
-  }
-  
-  .search-form button[type="submit"] {
-    /* Increase padding and font size */
-    padding: 0.75em 1em; /* <--- ADJUSTED (was 0.5em 0.75em) */
-    font-size: 1em; /* <--- ADJUSTED (ensure base size) */
-    border: 1px solid #ccc;
-    border-left: none; 
-    background-color: #e0e0e0;
-    cursor: pointer;
-    border-radius: 0 4px 4px 0; 
-  }
+/* Add or modify CSS for the new container */
+.search-container {
+  /* Maybe set a min-width or let Pagefind UI handle size */
+  min-width: 250px; 
+  /* Add other flex properties if needed */
+}
+
+/* Ensure Pagefind's own styles load */
+/* Remove old .search-form related styles */
+/* .search-form { ... }
+.search-form input[type="search"] { ... }
+.search-form button[type="submit"] { ... } 
+*/
   
   /* Adjust dark theme for header */
   @media (prefers-color-scheme: dark) {

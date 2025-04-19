@@ -47,11 +47,11 @@ try {
   // Check if PagefindUI is available (it's loaded via script tag)
   if (typeof PagefindUI !== 'undefined') {
     new PagefindUI({ 
-      element: "#search-form", // Target the form element
+      element: "#search", // Target the form element
       showSubResults: true // Optional: show matches within pages
       // Add other config options here if needed later
     });
-    console.log("Pagefind UI initialized.");
+    console.log("Pagefind UI initialized onto #search.");
   } else {
     console.warn("PagefindUI not loaded, search will not work.");
   }
