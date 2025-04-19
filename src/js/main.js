@@ -42,4 +42,22 @@
       console.warn('Video grid container not found.');
     }
   
+    // Initialize Pagefind UI
+try {
+  // Check if PagefindUI is available (it's loaded via script tag)
+  if (typeof PagefindUI !== 'undefined') {
+    new PagefindUI({ 
+      element: "#search-form", // Target the form element
+      showSubResults: true // Optional: show matches within pages
+      // Add other config options here if needed later
+    });
+    console.log("Pagefind UI initialized.");
+  } else {
+    console.warn("PagefindUI not loaded, search will not work.");
+  }
+} catch (e) {
+  console.error("Error initializing Pagefind UI:", e);
+}
+
+    
   });

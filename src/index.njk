@@ -36,8 +36,16 @@ pagination:
   {# Loop through each video in our 'video' collection #}
   {%- for video in videosOnPage -%} 
 
-    <article class="video-item" data-date="{{ video.data.dateAdded }}"> {# Add date for potential JS sorting later #}
-      <a href="{{ video.url }}"> {# Link to the video's future detail page #}
+    <article class="video-item" 
+    data-date="{{ video.data.dateAdded }}"> {# Add date for potential JS sorting later #}
+    data-pagefind-index-attrs="data-date"> {# Optional: index date? #}
+      <a href="{{ video.url }}" 
+     data-pagefind-meta="videoId:{{ video.data.videoId }}" 
+     {# Add each tag as a filter attribute #}
+     {%- for tag in video.data.tags | stringToArray %}
+       data-pagefind-filter="tag:{{ tag }}"
+     {%- endfor %}>
+      
         <div class="thumbnail-container">
           {# Static thumbnail image #}
           <img 

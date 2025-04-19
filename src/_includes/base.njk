@@ -4,7 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title or "Video Directory" }}</title> {# Use page title, or default #}
-    <link rel="stylesheet" href="/css/style.css"> {# We'll create this later #}
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+    <script src="/pagefind/pagefind-ui.js" defer></script> 
+    <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
     <header class="site-header">
@@ -22,10 +24,8 @@
       </div>
     </header>
 
-    <main>
-      {# Define the content block that child layouts like video.njk will fill #}
-      {% block content %} 
-        {# This default content variable is used by pages *not* using extends/block #}
+    <main data-pagefind-body> 
+      {% block content %}
         {{ content | safe }} 
       {% endblock %}
     </main>
