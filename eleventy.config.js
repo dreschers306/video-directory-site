@@ -52,49 +52,59 @@ module.exports = async function(eleventyConfig) {
       return videos;
     });
 
-    // --- Active tagList Collection with INTENSE LOGGING ---
-    eleventyConfig.addCollection("tagList", function(collectionApi) {
-      console.log("\n[CONFIG] ---- Building 'tagList' Collection ----"); // Log: tagList start
-      let tagSet = new Set();
-      let videos;
-      try {
-          videos = collectionApi.getAllSorted(); // Get all items processed by Eleventy
-          console.log(`[CONFIG] tagList: getAllSorted() found ${videos.length} total items.`);
+// --- START: Updated tagList Collection ---
+eleventyConfig.addCollection("tagList", function(collectionApi) {
+  let tagSet = new Set(); 
 
-          // Filter specifically for items from our video folder
-          let videoItems = videos.filter(item => 
-              item.inputPath && item.inputPath.includes('/src/_content/videos/')
+  // Helper function still needed if called elsewhere or by filter
+  function stringToArrayHelper(input) { 
+    if (Array.isArray(input)) {
+      let extractedTags = [];
+      input.forEach(item => {
+        if (typeof item === 'string') {
+          extractedTags = extractedTags.concat(
+            item.split(',')
+                .map(subItem => subItem.trim())
+                .filter(subItem => subItem.length > 0)
           );
-          console.log(`[CONFIG] tagList: Filtered down to ${videoItems.length} video items.`);
-          
-          videoItems.forEach((item, index) => {
-            console.log(`[CONFIG] tagList[${index+1}]: Processing ${item.inputPath}`);
-            // Check if data and data.tags exist
-            if (item.data && item.data.tags) {
-              console.log(`[CONFIG] tagList[${index+1}]: Raw tags data:`, JSON.stringify(item.data.tags), `(Type: ${typeof item.data.tags})`);
-              let tags = stringToArrayHelper(item.data.tags);
-              console.log(`[CONFIG] tagList[${index+1}]: Processed tags:`, tags);
-              if (tags && tags.length > 0) {
-                  tags.forEach(tag => tagSet.add(tag));
-              } else {
-                  console.log(`[CONFIG] tagList[${index+1}]: No individual tags extracted after processing.`);
-              }
-            } else {
-              console.log(`[CONFIG] tagList[${index+1}]: No item.data.tags found.`);
-            }
-          });
+        }
+      });
+      return extractedTags;
+    }
+    if (typeof input === 'string') {
+      return input.split(',')
+                .map(item => item.trim()) 
+                .filter(item => item.length > 0); 
+    }
+    return []; 
+  }
 
-      } catch (e) {
-          console.error("[CONFIG] tagList: Error processing video items", e);
-          return []; // Return empty if error getting/processing items
-      }
-      console.log("[CONFIG] tagList: Final tagSet:", tagSet);
-      const sortedTags = [...tagSet].sort();
-      console.log("[CONFIG] tagList: Returning sorted tags:", sortedTags);
-      console.log("[CONFIG] ---- Finished 'tagList' Collection ----\n");
-      return sortedTags;
-    });
-    // --- End tagList Collection ---
+  // Process videos to get all unique tags
+  collectionApi.getAllSorted().forEach(item => { 
+    if (item.inputPath && item.inputPath.includes('/src/_content/videos/') && item.data.tags) {
+      let tags = stringToArrayHelper(item.data.tags); 
+      tags.forEach(tag => tagSet.add(tag));
+    }
+  });
+
+  // Get the full sorted list and total count
+  const sortedTags = [...tagSet].sort();
+  const totalTagCount = sortedTags.length;
+
+  // --- Slice here for display limit ---
+  const limitedTags = sortedTags.slice(0, 15); // <-- SET TO 3 FOR TESTING
+
+  // Optional log to confirm slicing
+  console.log(`[CONFIG] tagList: Total unique tags = ${totalTagCount}, Returning first ${limitedTags.length}`);
+
+  // Return an object containing both the limited list and the total count
+  return {
+    items: limitedTags,
+    totalCount: totalTagCount
+}; 
+});
+// --- END: Updated tagList Collection ---
+
     console.log("[CONFIG] Collections added"); // Log: Collections done
   } catch(e) { console.error("[CONFIG] Error adding collections:", e); }
 

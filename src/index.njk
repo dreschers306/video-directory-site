@@ -6,16 +6,16 @@ layout: "base.njk"
 {# --- START: Tags Section --- #}
 <div class="tags-section">
   <div class="tag-list">
-    {%- for tag in collections.tagList -%} 
-      {# Basic link structure, no slice or slugify yet #}
-      <a href="#" class="tag-box">{{ tag }}</a> 
+    {# Loop over the 'items' array within collections.tagList #}
+    {%- for tag in collections.tagList.items -%} 
+      {# Final link structure with slugify #}
+      <a href="/tags/{{ tag | slugify }}/" class="tag-box">{{ tag }}</a> 
     {%- else -%}
-       <p style="color: red;">ERROR: Loop thinks collections.tagList is empty!</p>
+       <p style="color: red;">Tag list collection is empty!</p>
     {%- endfor -%}
 
-    {# Keep the 'See all' link logic #}
-    {%- if collections.tagList.length > 40 -%} 
-      {# This condition will be false for now as length is 5 #}
+    {# Check totalCount against the limit (using 3 for testing) #}
+    {%- if collections.tagList.totalCount > 15 -%} 
       <a href="/tags/" class="tag-box tag-box--more">See all tags &rarr;</a>
     {%- endif -%}
   </div>
