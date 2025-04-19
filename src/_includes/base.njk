@@ -23,7 +23,11 @@
     </header>
 
     <main>
-      {{ content | safe }} {# This is where index.md content will go #}
+      {# Define the content block that child layouts like video.njk will fill #}
+      {% block content %} 
+        {# This default content variable is used by pages *not* using extends/block #}
+        {{ content | safe }} 
+      {% endblock %}
     </main>
 
     <footer>

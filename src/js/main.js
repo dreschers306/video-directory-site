@@ -29,27 +29,32 @@ function shuffleArray(array) {
   
       videoItems.forEach(item => {
         const thumbnailContainer = item.querySelector('.thumbnail-container');
-        const img = thumbnailContainer?.querySelector('img');
-        const video = thumbnailContainer?.querySelector('video.video-preview');
+        const imgStatic = thumbnailContainer?.querySelector('img.static-thumb')
+        const imgPreview = thumbnailContainer?.querySelector('img.img-preview');
   
-        if (!thumbnailContainer || !img || !video) {
-          console.warn('Could not find necessary elements in video item for hover:', item);
-          return; 
-        }
+        // Check if both images are found this time
+        if (!thumbnailContainer || !imgStatic || !imgPreview) {
+            // Only log warning if the preview image is expected but not found
+            if (!imgPreview && item.querySelector('[src*=".webp"]')) { // Basic check if preview URL existed
+                console.warn('Could not find necessary img elements in video item for hover:', item);
+            }
+            return; 
+          }
   
-        thumbnailContainer.addEventListener('mouseenter', () => {
-          img.style.opacity = '0'; 
-          video.style.opacity = '1'; 
-          video.play().catch(e => { /* Ignore playback errors for now */ }); 
-        });
+          thumbnailContainer.addEventListener('mouseenter', () => {
+            // console.log('Mouse Enter - Showing preview image:', imgPreview.src);
+            imgStatic.style.opacity = '0'; // Hide static image
+            imgPreview.style.opacity = '1'; // Show preview image
+            // No .play() needed
+          });
   
-        thumbnailContainer.addEventListener('mouseleave', () => {
-          video.pause();
-          video.style.opacity = '0'; 
-          img.style.opacity = '1'; 
-        });
-      });
-      // --- End of Hover Preview Initialization ---
+          thumbnailContainer.addEventListener('mouseleave', () => {
+            // console.log('Mouse Leave - Hiding preview image:', imgPreview.src);
+            imgPreview.style.opacity = '0'; // Hide preview image
+            imgStatic.style.opacity = '1'; // Show static image
+            // No .pause() needed
+          });
+        }); // End of forEach loop
   
     } else {
       console.warn('Video grid container not found.');

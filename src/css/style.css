@@ -200,7 +200,7 @@ body {
   }
   
   .thumbnail-container img,
-  .thumbnail-container video.video-preview {
+  .thumbnail-container img.img-preview {
     /* Styles mostly okay, ensure display block and absolute */
     display: block;
     position: absolute; 
@@ -209,13 +209,17 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover; 
-    transition: opacity 0.3s ease-in-out; 
-  }
-  
-  .thumbnail-container video.video-preview {
+    transition: opacity 0.3s ease-in-out;
     opacity: 0; 
     z-index: 5; 
   }
+
+  /* Ensure static thumb is initially visible and below */
+.thumbnail-container img.static-thumb {
+    /* Base styles likely already cover display, position, size, object-fit */
+    opacity: 1; 
+    z-index: 1; 
+ }
   
   .video-id-title {
     font-weight: bold;
@@ -228,6 +232,15 @@ body {
     text-overflow: ellipsis;
   }
   
+  .video-player-container {
+    position: relative; /* Needed for absolute positioned iframe */
+    padding-top: 56.25%; /* 16:9 Aspect Ratio (9 / 16 = 0.5625) */
+    height: 0; /* Collapse the div height */
+    overflow: hidden; /* Hide anything outside */
+    background-color: #000; /* Black background while loading/if error */
+    margin-bottom: 1.5em; /* Space below player */
+  }
+
   /* Basic dark theme variables (can refine later) */
   @media (prefers-color-scheme: dark) {
     body {

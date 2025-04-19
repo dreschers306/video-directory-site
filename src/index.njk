@@ -33,23 +33,25 @@ layout: "base.njk"
     <article class="video-item" data-date="{{ video.data.dateAdded }}"> {# Add date for potential JS sorting later #}
       <a href="{{ video.url }}"> {# Link to the video's future detail page #}
         <div class="thumbnail-container">
-          {# Display the thumbnail image #}
+          {# Static thumbnail image #}
           <img 
             src="{{ video.data.bunnyThumbnailUrl }}" 
             alt="Thumbnail for video {{ video.data.videoId }}" 
             loading="lazy" {# Improve performance #}
             width="320" {# Add dimensions for better layout stability #}
-            height="180"> 
+            height="180"
+            class="static-thumb"> 
 
-          {# Include the hidden preview video - styling will hide it initially #}
-          <video 
-            src="{{ video.data.bunnyPreviewVideoUrl }}" 
-            class="video-preview" 
-            loop 
-            muted 
-            playsinline 
-            preload="none"> {# Preload none initially for performance #}
-          </video>
+          {# Animated Preview Image (.webp) #}
+          {% if video.data.bunnyPreviewVideoUrl %}
+            <img 
+              src="{{ video.data.bunnyPreviewVideoUrl }}" {# <--- Changed from <video> to <img> #}
+              alt="Preview for video {{ video.data.videoId }}"
+              loading="lazy" {# Lazy load preview too #}
+              width="320"
+              height="180" 
+              class="img-preview"> {# <--- Added class, changed from video-preview #}
+          {% endif %}
         </div>
 
         {# Display the Video ID #}
