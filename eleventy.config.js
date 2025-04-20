@@ -9,40 +9,35 @@ module.exports = async function(eleventyConfig) {
   console.log("[CONFIG] Slugify imported successfully"); // Log: Import done
   // --- End dynamic import ---
 
-  // --- START: Add Shuffle Helper ---
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  // --- START: Define Helper Functions Once ---
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
-  return array; // Return the shuffled array
-}
-// --- END: Add Shuffle Helper ---
 
-  // --- START: Define Helper Function Once ---
   function stringToArrayHelper(input) {
-    console.log("[HELPER] stringToArrayHelper received:", input, `(Type: ${typeof input})`);
+    // console.log("[HELPER] stringToArrayHelper received:", input, `(Type: ${typeof input})`); // Optional log
     if (Array.isArray(input)) {
-      let result = input.map(item => String(item || '').trim()).filter(item => item.length > 0);
-       // If the array element itself might be comma-separated (like ['tag1,tag2'])
-       if (result.length === 1 && result[0].includes(',')) {
-           result = result[0].split(',').map(s => s.trim()).filter(s => s.length > 0);
-       }
-      console.log("[HELPER] Processed array input:", result);
-      return result;
+      let extractedTags = [];
+      input.forEach(item => {
+        if (typeof item === 'string') {
+          extractedTags = extractedTags.concat(
+            item.split(',').map(subItem => subItem.trim()).filter(subItem => subItem.length > 0)
+          );
+        }
+      });
+      return extractedTags;
     }
     if (typeof input === 'string') {
-      let result = input.split(',')
-                .map(item => item.trim())
-                .filter(item => item.length > 0);
-      console.log("[HELPER] Processed string input:", result);
-      return result;
+      return input.split(',').map(item => item.trim()).filter(item => item.length > 0);
     }
-    console.log("[HELPER] Returning empty array for input:", input);
     return [];
   }
-  console.log("[CONFIG] Helper function defined"); // Log: Helper defined
-  // --- END: Define Helper Function Once ---
+  console.log("[CONFIG] Helper functions defined"); // Log: Helper defined
+  // --- END: Define Helper Functions Once ---
 
   // --- Passthrough Copies ---
   try {
@@ -55,86 +50,62 @@ function shuffleArray(array) {
 
   // --- Collections ---
   try {
-    // --- START: Updated Video Collection with Shuffle ---
-  eleventyConfig.addCollection("video", function(collectionApi) {
-  console.log("[CONFIG] Building 'video' collection"); 
-  // Get all items Eleventy knows about, filter for our video markdown files
-  let videoItems = collectionApi.getAllSorted().filter(item => 
-      item.inputPath && item.inputPath.includes('/src/_content/videos/')
-  );
-  console.log(`[CONFIG] 'video' collection found ${videoItems.length} items.`); 
+    // Video Collection (Shuffled)
+    eleventyConfig.addCollection("video", function(collectionApi) {
+      console.log("[CONFIG] Building 'video' collection");
+      let videoItems = collectionApi.getAllSorted().filter(item =>
+          item.inputPath && item.inputPath.includes('/src/_content/videos/')
+      );
+      shuffleArray(videoItems); // Shuffle in place
+      console.log(`[CONFIG] 'video' collection shuffled ${videoItems.length} items.`);
+      return videoItems;
+    });
 
-  // Shuffle the array before returning
-  shuffleArray(videoItems);
-  console.log(`[CONFIG] 'video' collection shuffled ${videoItems.length} items.`); 
-
-  return videoItems;
-});
-// --- END: Updated Video Collection with Shuffle ---
-
-// --- START: Updated tagList Collection ---
-eleventyConfig.addCollection("tagList", function(collectionApi) {
-  let tagSet = new Set(); 
-
-  // Helper function still needed if called elsewhere or by filter
-  function stringToArrayHelper(input) { 
-    if (Array.isArray(input)) {
-      let extractedTags = [];
-      input.forEach(item => {
-        if (typeof item === 'string') {
-          extractedTags = extractedTags.concat(
-            item.split(',')
-                .map(subItem => subItem.trim())
-                .filter(subItem => subItem.length > 0)
-          );
+    // Tag List Collection (Sliced, returns Object)
+    eleventyConfig.addCollection("tagList", function(collectionApi) {
+      // console.log("\n[CONFIG] ---- Building 'tagList' Collection ----"); // Optional log
+      let tagSet = new Set();
+      collectionApi.getAllSorted().forEach(item => {
+        if (item.inputPath && item.inputPath.includes('/src/_content/videos/') && item.data.tags) {
+          let tags = stringToArrayHelper(item.data.tags); // Use helper defined above
+          tags.forEach(tag => tagSet.add(tag));
         }
       });
-      return extractedTags;
-    }
-    if (typeof input === 'string') {
-      return input.split(',')
-                .map(item => item.trim()) 
-                .filter(item => item.length > 0); 
-    }
-    return []; 
-  }
-
-  // Process videos to get all unique tags
-  collectionApi.getAllSorted().forEach(item => { 
-    if (item.inputPath && item.inputPath.includes('/src/_content/videos/') && item.data.tags) {
-      let tags = stringToArrayHelper(item.data.tags); 
-      tags.forEach(tag => tagSet.add(tag));
-    }
-  });
-
-  // Get the full sorted list and total count
-  const sortedTags = [...tagSet].sort();
-  const totalTagCount = sortedTags.length;
-
-  // --- Slice here for display limit ---
-  const limitedTags = sortedTags.slice(0, 15); // <-- SET TO 3 FOR TESTING
-
-  // Optional log to confirm slicing
-  console.log(`[CONFIG] tagList: Total unique tags = ${totalTagCount}, Returning first ${limitedTags.length}`);
-
-  // Return an object containing both the limited list and the total count
-  return {
-    items: limitedTags,
-    totalCount: totalTagCount
-}; 
-});
-// --- END: Updated tagList Collection ---
-
+      const sortedTags = [...tagSet].sort();
+      const totalTagCount = sortedTags.length;
+      const limitedTags = sortedTags.slice(0, 15); // Restore limit to 15
+      // console.log(`[CONFIG] tagList: Total unique tags = ${totalTagCount}, Returning first ${limitedTags.length}`); // Optional log
+      return { items: limitedTags, totalCount: totalTagCount };
+    });
     console.log("[CONFIG] Collections added"); // Log: Collections done
   } catch(e) { console.error("[CONFIG] Error adding collections:", e); }
+  // --- End Collections ---
 
   // --- Filters ---
   try {
+    // stringToArray Filter (uses helper)
     eleventyConfig.addFilter("stringToArray", stringToArrayHelper);
+
+    // slugify Filter (uses dynamic import)
     eleventyConfig.addFilter("slugify", function(str) {
       if (!str) { return ""; }
       return slugify(str, { lower: true, strict: true });
     });
+
+    // filterBySourceGroup Filter (uses shuffle helper internally)
+    eleventyConfig.addFilter("filterBySourceGroup", function(videoList, currentGroupId, currentUrl, limit = 10) { // Updated limit to 10
+      if (!currentGroupId || !videoList) { return []; }
+      const filtered = videoList.filter(item =>
+          item.data?.sourceGroupId === currentGroupId && item.url !== currentUrl
+      );
+      const shuffled = shuffleArray([...filtered]); // Shuffle a copy
+      const sliced = shuffled.slice(0, limit);
+      return sliced;
+    });
+
+    // REMOVED separate shuffle filter
+    // eleventyConfig.addFilter("shuffle", function(array) { ... }); 
+
     console.log("[CONFIG] Filters added"); // Log: Filters done
   } catch(e) { console.error("[CONFIG] Error adding filters:", e); }
   // --- End Filters ---

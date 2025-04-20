@@ -1,33 +1,27 @@
-{% extends "base.njk" %} {# Inherit the header, footer, etc. #}
+{% extends "base.njk" %}
 
-{% block content %} {# Define the main content area for this layout #}
+{% block content %}
   <article class="video-page">
 
-    {# Use videoId as the main page title - H1 for semantics #}
+    {# Video ID as Main Title #}
     <h1 class="video-main-title">{{ videoId }}</h1> 
 
     {# Video Player Container #}
     <div class="video-player-container"> 
       {% if bunnyVideoUrl %}
-        <iframe
-          src="{{ bunnyVideoUrl }}"
-          loading="lazy"
-          style="border: none; position: absolute; top: 0; height: 100%; width: 100%;"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-          allowfullscreen="true"
-        ></iframe>
+        <iframe src="{{ bunnyVideoUrl }}" loading="lazy" style="border: none; position: absolute; top: 0; height: 100%; width: 100%;" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen="true"></iframe>
       {% else %}
-        <p style="color: red; padding: 2em;">Error: Video URL not found!</p> {# Added style #}
+        <p style="color: red; padding: 2em;">Error: Video URL not found!</p>
       {% endif %}
     </div>
 
-    {# Action Buttons (Copy Link) #}
+    {# Action Buttons #}
     <div class="video-actions"> 
       <button type="button" id="copy-link-button" class="action-button">Copy Link</button>
       <span id="copy-link-feedback" class="feedback-message" aria-live="polite"></span>
     </div>
 
-    {# Metadata Section with Styled Links #}
+    {# Metadata Section - Includes Related Links Now #}
     <div class="video-metadata">
       <dl>
         {# --- Tags --- #}
@@ -43,31 +37,50 @@
           {%- endif -%}
         </dd>
 
-        {# --- Source Group ID --- #}
-        {% if sourceGroupId %}
+        {# --- Source Group ID (Hidden) --- #}
+        {# {% if sourceGroupId %}
           <dt>Source Group ID:</dt>
           <dd>{{ sourceGroupId }}</dd> 
-        {% endif %}
+        {% endif %} #}
 
-        {# --- Source URL (Revised Display) --- #}
+        {# --- Related Clips (as Links) --- #}
+        {% if sourceGroupId %} 
+          {# Call filter to get limited, shuffled list #}
+          {% set relatedVideos = collections.video | filterBySourceGroup(sourceGroupId, page.url, 10) %} {# Limit to 10 links #}
+
+          {% if relatedVideos.length > 0 %}
+            <dt>Related Clips:</dt>
+            <dd>
+              {# Loop and create simple links, separated by comma/space #}
+              {%- for relatedVideo in relatedVideos %}
+                <a href="{{ relatedVideo.url }}">{{ relatedVideo.data.videoId }}</a>{% if not loop.last %}, {% endif %} 
+              {%- endfor -%}
+            </dd>
+          {% endif %} {# End if relatedVideos.length > 0 #}
+        {% endif %} {# End if sourceGroupId #}
+        {# --- End Related Clips --- #}
+
+        {# --- Source URL --- #}
         {% if sourceUrl %}
-          {# <dt>Source URL:</dt> #}
-          <dd><a href="{{ sourceUrl }}" target="_blank" rel="noopener noreferrer nofollow">Source</a></dd> {# <-- Generic Text #}
+          <dt>Source URL:</dt>
+          <dd><a href="{{ sourceUrl }}" target="_blank" rel="noopener noreferrer nofollow">Source</a></dd> 
         {% endif %}
 
-        {# --- Affiliate Link (Revised Display) --- #}
+        {# --- Affiliate Link --- #}
         {% if affiliateLink %}
           <dt>Affiliate Link:</dt>
-          <dd><a href="{{ affiliateLink }}" target="_blank" rel="noopener noreferrer nofollow sponsored">Check Offer</a></dd> {# <-- Generic Text #}
+          <dd><a href="{{ affiliateLink }}" target="_blank" rel="noopener noreferrer nofollow sponsored">Check Offer</a></dd> 
         {% endif %}
 
-        {# Removed Date Added display #}
       </dl>
     </div>
+    {# --- END Metadata Section --- #}
 
-    {# Placeholders for Related/Suggested #}
-    <div class="related-videos" style="margin-top: 2em; border-top: 1px solid #ccc; padding-top: 1em;"><h4>Related Videos Placeholder</h4></div>
-    <div class="suggested-videos" style="margin-top: 2em; border-top: 1px solid #ccc; padding-top: 1em;"><h4>Suggested Videos Placeholder</h4></div>
+    {# --- REMOVED Separate Related Videos Grid --- #}
+
+    {# --- Suggested Videos Placeholder --- #}
+    {# We can add this back later below the metadata if desired #}
+     <div class="suggested-videos" style="margin-top: 2em; border-top: 1px solid #ccc; padding-top: 1em;"><h4>Suggested Videos Placeholder</h4></div> 
 
   </article>
 {% endblock %}
