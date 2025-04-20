@@ -15,11 +15,11 @@
         <a href="/" class="site-title">{{ title or "Video Directory" }}</a> 
 
         <div id="search" class="search-container"></div>
-        
+
       </div>
     </header>
 
-    <main data-pagefind-body> 
+    <main> 
       {% block content %}
         {{ content | safe }} 
       {% endblock %}
