@@ -310,3 +310,131 @@ body {
       background-color: #333;
     }
   }
+
+/* Action Buttons Styles */
+.video-actions {
+  /* Remove top border/padding as it's no longer at bottom */
+  /* border-top: 1px solid #ddd; */ 
+  /* padding-top: 1rem; */ 
+
+  margin-top: 0.5rem; /* Adjust spacing AFTER player */
+  margin-bottom: 1.5rem; /* Adjust spacing BEFORE metadata */
+  display: flex; 
+  align-items: center;
+  justify-content: flex-end; /* <<< Align button(s) to the right */
+  gap: 1rem; 
+}
+
+.action-button {
+  padding: 0.6em 1.2em;
+  font-size: 0.9em;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  color: #333;
+}
+.action-button:hover {
+  background-color: #e0e0e0;
+}
+.action-button:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.feedback-message {
+  font-size: 0.9em;
+  color: #555;
+}
+
+/* Metadata Section Styles */
+.video-metadata {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+.video-metadata dl {
+  margin: 0;
+}
+
+.video-metadata dt {
+  font-weight: bold;
+  color: #555;
+  float: left; /* Float labels left */
+  width: 120px; /* Fixed width for labels */
+  clear: left; /* Ensure each dt starts on new line */
+  margin-right: 1em; /* Space between label and data */
+  margin-bottom: 0.6em; /* Space between rows */
+  text-align: right; /* Align label text right */
+}
+
+.video-metadata dd {
+  margin-left: 130px; /* Start data after label width + margin-right */
+  margin-bottom: 0.6em; /* Space between rows */
+  word-wrap: break-word; /* Wrap long URLs/data */
+}
+
+/* Ensure long links break nicely */
+.video-metadata dd a {
+   word-break: break-all; 
+   color: #007bff; /* Example link color */
+}
+ .video-metadata dd a:hover {
+   text-decoration: underline;
+ }
+
+/* Style the container for tags */
+.tag-list-inline {
+  /* Allow tag boxes to sit inline and wrap */
+}
+.tag-list-inline .tag-box {
+  /* Reuse existing tag-box style */
+  margin-right: 0.4em; /* Adjust spacing */
+  margin-bottom: 0.4em; /* Add bottom margin for wrapping */
+  display: inline-block; /* Make sure they are inline */
+}
+
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .video-metadata {
+    border-top-color: #444;
+  }
+  .video-metadata dt {
+    color: #aaa;
+  }
+   .video-metadata dd a {
+     color: #6bbdff; 
+   }
+  /* tag-box dark theme already defined elsewhere */
+}
+
+/* Video Page Title */
+.video-main-title {
+  font-size: 2em; /* Adjust size as needed */
+  margin-top: 0;
+  margin-bottom: 0.75em;
+  line-height: 1.2;
+  word-break: break-all; /* Break long IDs if needed */
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+  .video-actions {
+    border-top-color: #444;
+  }
+  .action-button {
+     border-color: #555;
+     background-color: #444;
+     color: #eee;
+  }
+  .action-button:hover {
+    background-color: #555;
+  }
+  .feedback-message {
+     color: #aaa;
+  }
+}

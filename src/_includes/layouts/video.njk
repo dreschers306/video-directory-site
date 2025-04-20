@@ -1,44 +1,73 @@
-{% extends "base.njk" %} {# Inherit the header, footer, etc. from the main layout #}
+{% extends "base.njk" %} {# Inherit the header, footer, etc. #}
 
 {% block content %} {# Define the main content area for this layout #}
   <article class="video-page">
-    <h2>Video Details Page</h2>
-    {# Access front matter data directly using the key name #}
-    <h3>ID: {{ videoId }}</h3> 
 
-{# Container to maintain aspect ratio #}
-<div class="video-player-container"> 
-  {% if bunnyVideoUrl %}
-    <iframe
-      src="{{ bunnyVideoUrl }}" {# Use variable for the source #}
-      loading="lazy"
-      style="border: none; position: absolute; top: 0; height: 100%; width: 100%;"
-      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-      allowfullscreen="true"
-    ></iframe>
-  {% else %}
-    <p>Error: Video URL not found!</p> {# Fallback message #}
-  {% endif %}
-</div>
+    {# Use videoId as the main page title - H1 for semantics #}
+    <h1 class="video-main-title">{{ videoId }}</h1> 
 
-    {# Placeholder for metadata #}
+    {# Video Player Container #}
+    <div class="video-player-container"> 
+      {% if bunnyVideoUrl %}
+        <iframe
+          src="{{ bunnyVideoUrl }}"
+          loading="lazy"
+          style="border: none; position: absolute; top: 0; height: 100%; width: 100%;"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+          allowfullscreen="true"
+        ></iframe>
+      {% else %}
+        <p style="color: red; padding: 2em;">Error: Video URL not found!</p> {# Added style #}
+      {% endif %}
+    </div>
+
+    {# Action Buttons (Copy Link) #}
+    <div class="video-actions"> 
+      <button type="button" id="copy-link-button" class="action-button">Copy Link</button>
+      <span id="copy-link-feedback" class="feedback-message" aria-live="polite"></span>
+    </div>
+
+    {# Metadata Section with Styled Links #}
     <div class="video-metadata">
-      <h4>Metadata:</h4>
-      <p>Tags: {{ tags | stringToArray | join(", ") }}</p> {# Use our filter #}
-      <p>Source Group ID: {{ sourceGroupId | default("N/A") }}</p>
-      <p>Source URL: {{ sourceUrl | default("N/A") }}</p>
-      <p>Affiliate Link: {{ affiliateLink | default("N/A") }}</p>
-      <p>Date Added: {{ dateAdded }}</p> {# We can display it here even if hidden elsewhere #}
+      <dl>
+        {# --- Tags --- #}
+        <dt>Tags:</dt>
+        <dd class="tag-list-inline"> 
+          {%- set videoTags = tags | stringToArray -%} 
+          {%- if videoTags.length > 0 -%}
+            {%- for tag in videoTags -%}
+              <a href="/tags/{{ tag | slugify }}/" class="tag-box">{{ tag }}</a>
+            {%- endfor -%}
+          {%- else -%}
+            <span>N/A</span> 
+          {%- endif -%}
+        </dd>
+
+        {# --- Source Group ID --- #}
+        {% if sourceGroupId %}
+          <dt>Source Group ID:</dt>
+          <dd>{{ sourceGroupId }}</dd> 
+        {% endif %}
+
+        {# --- Source URL (Revised Display) --- #}
+        {% if sourceUrl %}
+          {# <dt>Source URL:</dt> #}
+          <dd><a href="{{ sourceUrl }}" target="_blank" rel="noopener noreferrer nofollow">Source</a></dd> {# <-- Generic Text #}
+        {% endif %}
+
+        {# --- Affiliate Link (Revised Display) --- #}
+        {% if affiliateLink %}
+          <dt>Affiliate Link:</dt>
+          <dd><a href="{{ affiliateLink }}" target="_blank" rel="noopener noreferrer nofollow sponsored">Check Offer</a></dd> {# <-- Generic Text #}
+        {% endif %}
+
+        {# Removed Date Added display #}
+      </dl>
     </div>
 
-    {# Placeholder for Related Videos #}
-    <div class="related-videos" style="margin-top: 2em; border-top: 1px solid #ccc; padding-top: 1em;">
-      <h4>Related Videos Placeholder</h4>
-    </div>
-     {# Placeholder for Sharing Buttons #}
-    <div class="sharing-buttons" style="margin-top: 1em; border-top: 1px solid #ccc; padding-top: 1em;">
-        <h4>Sharing Placeholder</h4>
-    </div>
+    {# Placeholders for Related/Suggested #}
+    <div class="related-videos" style="margin-top: 2em; border-top: 1px solid #ccc; padding-top: 1em;"><h4>Related Videos Placeholder</h4></div>
+    <div class="suggested-videos" style="margin-top: 2em; border-top: 1px solid #ccc; padding-top: 1em;"><h4>Suggested Videos Placeholder</h4></div>
 
   </article>
 {% endblock %}

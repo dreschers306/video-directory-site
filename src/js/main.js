@@ -37,11 +37,40 @@
             // No .pause() needed
           });
         }); // End of forEach loop
-  
+        console.log(`Hover previews initialized for ${videoItems.length} items.`);
+        // --- End Hover Preview Logic ---
+
     } else {
       console.warn('Video grid container not found.');
     }
+
+  // --- START: Copy Link Button Logic ---
+  const copyButton = document.getElementById('copy-link-button');
+  const copyFeedback = document.getElementById('copy-link-feedback');
   
+  if (copyButton && copyFeedback) {
+    copyButton.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => {
+          // Success feedback
+          copyFeedback.textContent = 'Link Copied!';
+          copyButton.disabled = true; // Briefly disable button
+          // Clear feedback after a delay
+          setTimeout(() => {
+            copyFeedback.textContent = '';
+            copyButton.disabled = false;
+          }, 2000); // 2 seconds
+        })
+        .catch(err => {
+          // Error feedback (rare for modern browsers)
+          copyFeedback.textContent = 'Copy failed!';
+          console.error('Failed to copy link: ', err);
+           setTimeout(() => { copyFeedback.textContent = ''; }, 3000);
+        });
+    });
+  }
+  // --- END: Copy Link Button Logic ---    
+
     // Initialize Pagefind UI
 try {
   // Check if PagefindUI is available (it's loaded via script tag)
