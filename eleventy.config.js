@@ -56,8 +56,9 @@ module.exports = async function(eleventyConfig) {
       let videoItems = collectionApi.getAllSorted().filter(item =>
           item.inputPath && item.inputPath.includes('/src/_content/videos/')
       );
-      shuffleArray(videoItems); // Shuffle in place
-      console.log(`[CONFIG] 'video' collection shuffled ${videoItems.length} items.`);
+      console.log(`[CONFIG] 'video' collection found ${videoItems.length} items.`);
+      //shuffleArray(videoItems); // Shuffle in place
+      //console.log(`[CONFIG] 'video' collection shuffled ${videoItems.length} items.`);
       return videoItems;
     });
 
@@ -108,6 +109,26 @@ module.exports = async function(eleventyConfig) {
 
     console.log("[CONFIG] Filters added"); // Log: Filters done
   } catch(e) { console.error("[CONFIG] Error adding filters:", e); }
+
+// --- START: Replace filterOutUrl with version that includes slicing ---
+eleventyConfig.addFilter("filterOutUrl", function(videoList, urlToExclude, limit = 8) { // Added limit parameter, default 5
+  // console.log(`\n--- [FILTER filterOutUrl] Running ---`); // Keep logs if you want
+  // console.log(`  Received urlToExclude: ${urlToExclude}`);
+  // console.log(`  Received videoList length: ${videoList?.length}`);
+  // console.log(`  Received limit: ${limit}`);
+
+  if (!videoList) { return []; } // Handle missing list
+
+  // 1. Filter
+  const filtered = videoList.filter(item => item.url !== urlToExclude);
+  // 2. Shuffle the filtered list (a copy)
+  const shuffled = shuffleArray([...filtered]); 
+  // 3. Slice
+  const sliced = shuffled.slice(0, limit);
+  return sliced; // Return the final filtered, shuffled, sliced list
+});
+// --- END Updated filterOutUrl ---
+
   // --- End Filters ---
 
   // Return Eleventy options

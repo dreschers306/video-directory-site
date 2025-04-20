@@ -78,9 +78,39 @@
 
     {# --- REMOVED Separate Related Videos Grid --- #}
 
-    {# --- Suggested Videos Placeholder --- #}
-    {# We can add this back later below the metadata if desired #}
-     <div class="suggested-videos" style="margin-top: 2em; border-top: 1px solid #ccc; padding-top: 1em;"><h4>Suggested Videos Placeholder</h4></div> 
+    {# --- START: Suggested Videos Section --- #}
+
+{# Get filtered AND sliced list directly from our updated filter #}
+{% set suggestedVideos = collections.video | filterOutUrl(page.url, 3) %} {# Limit to 5 #}
+
+{% if suggestedVideos.length > 0 %}
+  <div class="suggested-videos" style="margin-top: 2em; border-top: 1px solid #ccc; padding-top: 1em;">
+    <h3>Suggested Videos</h3>
+    {# Reuse the video-grid class for layout #}
+    <div class="video-grid"> 
+      {%- for suggestedVideo in suggestedVideos -%}
+        {# Render the standard video item article #}
+        <article class="video-item"> 
+          <a href="{{ suggestedVideo.url }}">
+            <div class="thumbnail-container">
+              <img src="{{ suggestedVideo.data.bunnyThumbnailUrl }}" 
+                   alt="Thumbnail for video {{ suggestedVideo.data.videoId }}" 
+                   loading="lazy" width="320" height="180" class="static-thumb">
+              {% if suggestedVideo.data.bunnyPreviewVideoUrl %}
+                  <img src="{{ suggestedVideo.data.bunnyPreviewVideoUrl }}" 
+                       alt="Preview for video {{ suggestedVideo.data.videoId }}" 
+                       loading="lazy" width="320" height="180" 
+                       class="img-preview">
+              {% endif %}  
+            </div>
+            <p class="video-id-title">{{ suggestedVideo.data.videoId }}</p>
+          </a>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+{% endif %} {# End if suggestedVideos.length > 0 #}
+{# --- END: Suggested Videos Section --- #}
 
   </article>
 {% endblock %}
